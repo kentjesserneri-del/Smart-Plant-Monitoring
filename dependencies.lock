@@ -1,0 +1,17 @@
+dependencies:
+  esp-idf-lib/dht:
+    component_hash: 257e0d75dc0cc7d274f64860ea389c815cfc056997e74454ac8a815d16008c10
+    dependencies: []
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.3.0
+  idf:
+    source:
+      type: idf
+    version: 5.1.4
+direct_dependencies:
+- esp-idf-lib/dht
+manifest_hash: 3cb0a83cf8d6bbd1acbf1a91c595cabeff6c8ba252503f1fe9059cb99dd64443
+target: esp32
+version: 2.0.0

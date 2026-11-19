@@ -1,0 +1,16 @@
+# Secrets (NEVER commit)
+config.h
+
+# PlatformIO build artifacts
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# ESP-IDF generated files
+sdkconfig
+sdkconfig.old
+managed_components/
+
+# IDE / OS
+.vscode/
+.DS_Store
