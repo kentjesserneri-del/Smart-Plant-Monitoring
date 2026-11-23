@@ -1,10 +1,15 @@
 
-#include <stdio.h>
-
 #include "sensors.h"
 #include "monitoring.h"
 #include "wifi_mgr.h"
 #include "mqtt_mgr.h"
+#include "discord_mgr.h"
+#include "email_mgr.h"
+#include "callmebot_mgr.h"
+#include "mastodon_mgr.h"
+#include "notification_sync.h"
+#include "sensor_task.h"
+#include "system_time.h"
 
 #include "esp_log.h"
 #include "esp_err.h"
@@ -14,160 +19,148 @@
 
 static const char *TAG = "main";
 
-/*
- * Sensor monitoring task
- *
- * Runs on Core 1 to isolate the timing-sensitive
- * DHT11 communication from Wi-Fi activity.
- */
-static void sensor_monitor_task(void *pvParameters)
-{
-    ESP_LOGI(TAG, "Sensor monitoring task started on Core 1.");
-
-    ESP_LOGI(TAG, "DHT11: GPIO13");
-    ESP_LOGI(TAG, "Potentiometer: GPIO34");
-    ESP_LOGI(TAG, "Moisture input: SIMULATED");
-
-    vTaskDelay(pdMS_TO_TICKS(2000));
-
-    while (1)
-    {
-        sensor_reading_t reading;
-
-        esp_err_t err = sensors_read(&reading);
-
-        if (err == ESP_OK)
-        {
-            if (reading.valid)
-            {
-                ESP_LOGI(
-                    TAG,
-                    "DHT11: %.1f C | RH: %.1f %% | ADC: %d | Simulated Moisture: %.1f%%",
-                    reading.temp_c,
-                    reading.rh_pct,
-                    reading.raw_adc,
-                    reading.moisture_pct
-                );
-
-                /*
-                 * Queue the reading for MQTT.
-                 * This does not wait for network transmission.
-                 */
-                if (!mqtt_mgr_publish_reading(&reading))
-                {
-                    ESP_LOGW(
-                        TAG,
-                        "MQTT reading queue unavailable or full."
-                    );
-                }
-            }
-            else
-            {
-                ESP_LOGW(
-                    TAG,
-                    "Reading INVALID (DHT11=%d | Potentiometer=%d)",
-                    reading.dht_valid,
-                    reading.soil_valid
-                );
-            }
-
-            plant_event_t event;
-
-            if (monitor_evaluate(&reading, &event))
-            {
-                ESP_LOGI(
-                    TAG,
-                    "PLANT EVENT: Type=%d | Moisture=%.1f%%",
-                    event.type,
-                    reading.moisture_pct
-                );
-            }
-        }
-        else
-        {
-            ESP_LOGE(
-                TAG,
-                "Sensor reading failed: %s",
-                esp_err_to_name(err)
-            );
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(5000));
-    }
-}
+#define WIFI_TIME_SYNC_TIMEOUT_MS 30000
+#define SENSOR_TASK_STACK_SIZE    4096
+#define SENSOR_TASK_PRIORITY      5
+#define SENSOR_TASK_CORE          1
 
 void app_main(void)
 {
     ESP_LOGI(TAG, "Booting Smart Plant Monitoring System...");
 
-    /*
-     * Initialize existing sensors.
-     */
+    ESP_ERROR_CHECK(notification_sync_init());
+
+    /* 1. Initialize sensors and monitoring. */
+
     ESP_ERROR_CHECK(sensors_init());
 
     monitor_init();
 
     ESP_LOGI(TAG, "Sensors and monitoring initialized.");
 
-    /*
-     * Initialize Wi-Fi.
-     */
+    /* 2. Initialize Wi-Fi and SNTP. */
+
     esp_err_t wifi_err = wifi_mgr_init();
 
-    if (wifi_err == ESP_OK)
-    {
+    if (wifi_err == ESP_OK) {
         ESP_LOGI(TAG, "Wi-Fi manager initialized.");
-    }
-    else
-    {
+        ESP_LOGI(TAG, "Waiting for Philippine system time...");
+
+        BaseType_t time_synced = wifi_mgr_wait_for_time(
+            pdMS_TO_TICKS(WIFI_TIME_SYNC_TIMEOUT_MS)
+        );
+
+        if (time_synced == pdTRUE) {
+            ESP_LOGI(TAG, "System time synchronized successfully.");
+            display_system_time();
+        } else {
+            ESP_LOGW(TAG, "SNTP synchronization timeout.");
+            ESP_LOGW(TAG, "Continuing without synchronized time.");
+        }
+    } else {
         ESP_LOGE(
             TAG,
             "Wi-Fi initialization failed: %s",
             esp_err_to_name(wifi_err)
         );
 
-        ESP_LOGW(TAG, "Sensor monitoring will continue.");
+        ESP_LOGW(TAG, "Continuing without Wi-Fi.");
     }
 
-    /*
-     * Initialize MQTT independently.
-     * The MQTT client handles its own connection attempts.
-     */
+    /* 3. Initialize MQTT. */
+
     esp_err_t mqtt_err = mqtt_mgr_init();
 
-    if (mqtt_err == ESP_OK)
-    {
+    if (mqtt_err == ESP_OK) {
         ESP_LOGI(TAG, "MQTT manager initialized.");
-    }
-    else
-    {
+    } else {
         ESP_LOGE(
             TAG,
             "MQTT initialization failed: %s",
             esp_err_to_name(mqtt_err)
         );
+    }
 
-        ESP_LOGW(
+    /* 4. Initialize Discord. */
+
+    esp_err_t discord_err = discord_mgr_init();
+
+    if (discord_err == ESP_OK) {
+        ESP_LOGI(TAG, "Discord manager initialized.");
+    } else {
+        ESP_LOGE(
             TAG,
-            "Sensor monitoring will continue without MQTT."
+            "Discord initialization failed: %s",
+            esp_err_to_name(discord_err)
         );
     }
 
-    /*
-     * Run sensor monitoring on Core 1.
-     */
+    /* 5. Initialize Gmail. */
+
+    esp_err_t email_err = email_mgr_init();
+
+    if (email_err == ESP_OK) {
+        ESP_LOGI(TAG, "Gmail manager initialized.");
+    } else {
+        ESP_LOGE(
+            TAG,
+            "Gmail initialization failed: %s",
+            esp_err_to_name(email_err)
+        );
+    }
+
+    /* 6. Initialize CallMeBot. */
+
+    esp_err_t callmebot_err = callmebot_mgr_init();
+
+    if (callmebot_err == ESP_OK) {
+        ESP_LOGI(TAG, "CallMeBot manager initialized.");
+    } else {
+        ESP_LOGE(
+            TAG,
+            "CallMeBot initialization failed: %s",
+            esp_err_to_name(callmebot_err)
+        );
+    }
+
+    /* 7. Initialize Mastodon. */
+
+    esp_err_t mastodon_err = mastodon_mgr_init();
+
+    if (mastodon_err == ESP_OK) {
+        ESP_LOGI(TAG, "Mastodon manager initialized.");
+    } else {
+        ESP_LOGE(
+            TAG,
+            "Mastodon initialization failed: %s",
+            esp_err_to_name(mastodon_err)
+        );
+    }
+
+    /* 8. Start sensor monitoring task on Core 1. */
+
     BaseType_t task_result = xTaskCreatePinnedToCore(
         sensor_monitor_task,
         "sensor_monitor",
-        4096,
+        SENSOR_TASK_STACK_SIZE,
         NULL,
-        5,
+        SENSOR_TASK_PRIORITY,
         NULL,
-        1
+        SENSOR_TASK_CORE
     );
 
-    if (task_result != pdPASS)
-    {
+    if (task_result != pdPASS) {
         ESP_LOGE(TAG, "Failed to create sensor monitoring task.");
+        return;
     }
+
+    ESP_LOGI(TAG, "Sensor monitoring task started successfully.");
+
+    ESP_LOGI(
+        TAG,
+        "Automatic notification tests disabled. "
+        "Waiting for real plant monitoring events."
+    );
+
+    ESP_LOGI(TAG, "Smart Plant Monitoring System is running.");
 }
