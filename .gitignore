@@ -14,3 +14,4 @@ managed_components/
 # IDE / OS
 .vscode/
 .DS_Store
+config.h
