@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="945" viewBox="0 0 1600 945" font-family="'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-label="Smart Plant Monitoring System firmware architecture" xmlns:c2pa="http://c2pa.org/manifest">
+<title>Smart Plant Monitoring System - Firmware Architecture</title>
+<defs>
+  <style>
+    .bg{fill:#f8fafc}
+    .band{fill:#f1f5f9;stroke:#e2e8f0;stroke-width:1.5}
+    .band-label{font-size:12px;font-weight:700;letter-spacing:1.6px;fill:#64748b}
+    .title{font-size:28px;font-weight:700;fill:#0f172a}
+    .sub{font-size:15px;fill:#475569}
+    .hw{fill:#eff6ff;stroke:#3b82f6;stroke-width:1.5}
+    .fw{fill:#ecfdf5;stroke:#10b981;stroke-width:1.5}
+    .net{fill:#fffbeb;stroke:#f59e0b;stroke-width:1.5}
+    .ext{fill:#f5f3ff;stroke:#8b5cf6;stroke-width:1.5}
+    .plain{fill:#ffffff;stroke:#cbd5e1;stroke-width:1.5}
+    .h{font-size:17px;font-weight:700;fill:#0f172a}
+    .t{font-size:14.5px;fill:#334155}
+    .s{font-size:13px;fill:#64748b}
+    .lbl{font-size:12px;font-style:italic;fill:#64748b}
+    .foot{font-size:12.5px;fill:#64748b}
+  </style>
+  <marker id="arr" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+    <path d="M0 1 L11 6 L0 11 Z" fill="#475569"/>
+  </marker>
+  <marker id="arrd" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+    <path d="M0 1 L11 6 L0 11 Z" fill="#94a3b8"/>
+  </marker>
+  <filter id="sh" x="-5%" y="-8%" width="110%" height="125%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.10"/>
+  </filter>
+</defs>
+
+<rect class="bg" width="1600" height="945"/>
+
+<!-- Header -->
+<text x="60" y="56" class="title">SMART PLANT MONITORING SYSTEM — FIRMWARE ARCHITECTURE</text>
+<text x="60" y="84" class="sub">ESP-IDF 5.1.4 · FreeRTOS task coordination · MQTT · approved notification alternatives</text>
+<g class="s">
+  <rect x="1090" y="42" width="14" height="14" rx="3" class="hw"/><text x="1112" y="54">Hardware</text>
+  <rect x="1195" y="42" width="14" height="14" rx="3" class="fw"/><text x="1217" y="54">Firmware</text>
+  <rect x="1295" y="42" width="14" height="14" rx="3" class="net"/><text x="1317" y="54">Network</text>
+  <rect x="1400" y="42" width="14" height="14" rx="3" class="ext"/><text x="1422" y="54">External</text>
+</g>
+<line x1="60" y1="104" x2="1540" y2="104" stroke="#e2e8f0" stroke-width="1.5"/>
+
+<!-- Bands -->
+<rect x="40" y="125" width="1520" height="270" rx="14" class="band"/>
+<text x="64" y="150" class="band-label">SENSING · PROCESSING · MQTT</text>
+<rect x="40" y="420" width="1520" height="205" rx="14" class="band"/>
+<text x="64" y="445" class="band-label">NOTIFICATION PIPELINE</text>
+<rect x="40" y="650" width="1520" height="240" rx="14" class="band"/>
+<text x="64" y="675" class="band-label">EXTERNAL NOTIFICATION CHANNELS</text>
+
+<!-- Connections (drawn first so boxes sit on top) -->
+<g fill="none" stroke="#475569" stroke-width="2" stroke-linejoin="round" marker-end="url(#arr)">
+  <path d="M320 220 H360 V245 H400"/>
+  <path d="M320 330 H360 V305 H400"/>
+  <path d="M680 275 H760"/>
+  <path d="M540 215 V190 H1130 V210 H1180"/>
+  <path d="M1330 250 V290"/>
+  <path d="M910 335 V470"/>
+  <path d="M760 520 H680"/>
+  <path d="M540 570 V715 H365 V760"/>
+  <path d="M540 570 V715 H655 V760"/>
+  <path d="M540 570 V715 H945 V760"/>
+  <path d="M540 570 V715 H1235 V760"/>
+</g>
+<path d="M1060 520 H1180" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrd)"/>
+<circle cx="540" cy="715" r="4.5" fill="#475569"/>
+
+<!-- Connection labels -->
+<text x="720" y="267" text-anchor="middle" class="lbl">readings</text>
+<text x="835" y="182" text-anchor="middle" class="lbl">sensor readings</text>
+<text x="924" y="448" class="lbl">confirmed events</text>
+<text x="720" y="512" text-anchor="middle" class="lbl">dispatch</text>
+<text x="1120" y="512" text-anchor="middle" class="lbl">uses</text>
+
+<!-- Inputs -->
+<g filter="url(#sh)">
+  <rect x="80" y="180" width="240" height="80" rx="12" class="hw"/>
+  <rect x="80" y="290" width="240" height="80" rx="12" class="hw"/>
+</g>
+<text x="200" y="214" text-anchor="middle" class="h">DHT11</text>
+<text x="200" y="238" text-anchor="middle" class="t">Temperature + RH</text>
+<text x="200" y="324" text-anchor="middle" class="h">Potentiometer</text>
+<text x="200" y="348" text-anchor="middle" class="t">Simulated soil moisture</text>
+
+<!-- Acquisition + monitoring -->
+<g filter="url(#sh)">
+  <rect x="400" y="215" width="280" height="120" rx="12" class="fw"/>
+  <rect x="760" y="215" width="300" height="120" rx="12" class="fw"/>
+</g>
+<text x="540" y="253" text-anchor="middle" class="h">Sensor acquisition</text>
+<text x="540" y="279" text-anchor="middle" class="t">Read · validate · timestamp</text>
+<text x="540" y="303" text-anchor="middle" class="s">DHT11 retries + ADC conversion</text>
+<text x="910" y="253" text-anchor="middle" class="h">Monitoring / event logic</text>
+<text x="910" y="279" text-anchor="middle" class="t">DRY · NORMAL · WET</text>
+<text x="910" y="303" text-anchor="middle" class="s">Sensor-fault detection</text>
+
+<!-- MQTT -->
+<g filter="url(#sh)">
+  <rect x="1180" y="170" width="300" height="80" rx="12" class="net"/>
+  <rect x="1180" y="290" width="300" height="80" rx="12" class="ext"/>
+</g>
+<text x="1330" y="204" text-anchor="middle" class="h">MQTT manager</text>
+<text x="1330" y="228" text-anchor="middle" class="t">Publish sensor data</text>
+<text x="1330" y="324" text-anchor="middle" class="h">MQTT broker</text>
+<text x="1330" y="348" text-anchor="middle" class="t">Subscribers / dashboard</text>
+
+<!-- Notification pipeline -->
+<g filter="url(#sh)">
+  <rect x="760" y="470" width="300" height="100" rx="12" class="fw"/>
+  <rect x="400" y="470" width="280" height="100" rx="12" class="net"/>
+  <rect x="1180" y="440" width="300" height="160" rx="12" class="plain"/>
+</g>
+<text x="910" y="508" text-anchor="middle" class="h">Event queue / dispatcher</text>
+<text x="910" y="534" text-anchor="middle" class="t">Queue confirmed plant events</text>
+<text x="540" y="508" text-anchor="middle" class="h">Notification synchronization</text>
+<text x="540" y="534" text-anchor="middle" class="t">Shared connection lock</text>
+
+<text x="1330" y="474" text-anchor="middle" class="h">Platform services</text>
+<g fill="#64748b">
+  <circle cx="1210" cy="500" r="3"/><circle cx="1210" cy="525" r="3"/><circle cx="1210" cy="550" r="3"/><circle cx="1210" cy="575" r="3"/>
+</g>
+<text x="1226" y="505" class="t">Wi-Fi manager</text>
+<text x="1226" y="530" class="t">SNTP / system time</text>
+<text x="1226" y="555" class="t">TLS / HTTPS</text>
+<text x="1226" y="580" class="t">FreeRTOS scheduler</text>
+
+<!-- Channels -->
+<g filter="url(#sh)">
+  <rect x="240" y="760" width="250" height="90" rx="12" class="ext"/>
+  <rect x="530" y="760" width="250" height="90" rx="12" class="ext"/>
+  <rect x="820" y="760" width="250" height="90" rx="12" class="ext"/>
+  <rect x="1110" y="760" width="250" height="90" rx="12" class="ext"/>
+</g>
+<text x="365" y="800" text-anchor="middle" class="h">Gmail SMTP</text>
+<text x="365" y="824" text-anchor="middle" class="t">Email alert</text>
+<text x="655" y="800" text-anchor="middle" class="h">CallMeBot</text>
+<text x="655" y="824" text-anchor="middle" class="t">WhatsApp route</text>
+<text x="945" y="800" text-anchor="middle" class="h">Discord Webhook</text>
+<text x="945" y="824" text-anchor="middle" class="t">Notification alternative</text>
+<text x="1235" y="800" text-anchor="middle" class="h">Mastodon API</text>
+<text x="1235" y="824" text-anchor="middle" class="t">Social-post alternative</text>
+
+<text x="60" y="922" class="foot">Conceptual module architecture based on the implemented project and observed logs; adapt labels if source module names change.</text>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYToxNmEzMGNlMi1mN2EwLTQ4YWQtYjAwOS0wYzA3NTM3ZWZjM2UAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaF+iK4yTklp7ue/0T2Mz6KIAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDowYTI2NDliYi1lNWY1LTRlMDItYTgwZi04ZmFhNTc2OGE5M2RscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoHKyc9mMbQmuOCn7n3FPEtQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgg1KwAIORcR7dajjNKmyAcQJ04a0uuLEvWjFYAbKvxaSikZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaLbguEyK/Vxxo1yu1ByTlwoAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIPO4Ia3OEDm927PAXjAgudODxKa90MQ/UjcXqtCOAWeSZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GR7WZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjE2YTMwY2UyLWY3YTAtNDhhZC1iMDA5LTBjMDc1MzdlZmMzZS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjBhY2JjNWU2LTkzMjAtNDRhMS1hYzNjLTA5YjNmMjNhNTdjOHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCDUrAAg5FxHt1qOM0qbIBxAnThrS64sS9aMVgBsq/FpKKJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggCByfVSGRSZHivAgal7a35dgK0ImF/iqnve/FaRi3MoaiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFgga2tXOQ2X8DD2/O5wJzah+eBBaCoGkUJomU6Swot+E0J0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQJ1TbdPDW0fBOyT2S8IkHUDAlbOkQ3cFmth6mFx4Jt1L7KOArrJkP55BlP1s/jPK4h2wi9PLAeueLSFUe5oAtxs=</c2pa:manifest></metadata></svg>
