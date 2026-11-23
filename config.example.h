@@ -1,6 +1,16 @@
 #pragma once
 
+// ---- MQTT Broker ----
+#define CONFIG_MQTT_BROKER_URI      "mqtts://broker.mqtty.com:8883"
+#define CONFIG_MQTT_USERNAME        "YOUR_MQTT_USERNAME"
+#define CONFIG_MQTT_PASSWORD        "YOUR_MQTT_PASSWORD"
+#define CONFIG_MQTT_CLIENT_ID       "bca152-plant01-esp32"
 
+// ---- MQTT Topics ----
+#define CONFIG_MQTT_TOPIC_TEMP      "bca152/plant01/temperature"
+#define CONFIG_MQTT_TOPIC_HUMIDITY  "bca152/plant01/humidity"
+#define CONFIG_MQTT_TOPIC_MOISTURE  "bca152/plant01/moisture"
+#define CONFIG_MQTT_TOPIC_STATUS    "bca152/plant01/status"
 // ---- Wi-Fi ----
 #define CONFIG_WIFI_SSID         "YOUR_WIFI_SSID"
 #define CONFIG_WIFI_PASSWORD     "YOUR_WIFI_PASSWORD"
